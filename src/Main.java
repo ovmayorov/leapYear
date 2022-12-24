@@ -1,25 +1,39 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import static java.util.stream.Collectors.toList;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("РџРѕРёСЃРє РІРёСЃРѕРєРѕСЃРЅС‹С… РіРѕРґРѕРІ. ");
+        System.out.println("Поиск високосных годов. ");
 
-        //РќР°РїРёС€РёС‚Рµ РјРµС‚РѕРґ, РєРѕС‚РѕСЂС‹Р№ РЅР° РІС…РѕРґ РїСЂРёРЅРёРјР°РµС‚ РґРёР°РїР°Р·РѕРЅ Р»РµС‚, РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РІРёСЃРѕРєРѕСЃРЅС‹С… РіРѕРґРѕРІ РІ СЌС‚РѕРј РґРёР°РїР°Р·РѕРЅРµ.
-        // РџСЂРёРјРµС‡Р°РЅРёРµ: РіРѕРґ РІРёСЃРѕРєРѕСЃРЅС‹Р№ РµСЃР»Рё РѕРЅ РґРµР»РёС‚СЃСЏ РЅР° 4 , РїСЂРё СЌС‚РѕРј РµСЃР»Рё РґРµР»РёС‚СЃСЏ РЅР° 100 С‚Рѕ РґРѕР»Р¶РµРЅ РґРµР»РёС‚СЊСЃСЏ Рё РЅР° 400
-        System.out.println("РћРїСЂРµРґРµР»РёС‚Рµ РґРёР°РїР°Р·РѕРЅ Р»РµС‚");
-        System.out.println("Р’РІРµРґРёС‚Рµ РіРѕРґ РЅР°С‡Р°Р»Р° РґРёР°РїР°Р·РѕРЅР°: ");
+        //Напишите метод, который на вход принимает диапазон лет, возвращает список високосных годов в этом диапазоне.
+        // Примечание: год високосный если он делится на 4 , при этом если делится на 100 то должен делиться и на 400
+        System.out.println("Определите диапазон лет");
+        System.out.println("Введите год начала диапазона: ");
         int startYear = scanner.nextInt();
-        System.out.println("Р’РІРµРґРёС‚Рµ РїРѕСЃР»РµРґРЅРёР№ РіРѕРґ РґРёР°РїР°Р·РѕРЅР°: ");
+        System.out.println("Введите последний год диапазона: ");
         int endYear = scanner.nextInt();
 
         List<Integer> myLeapYears = returnLeapYear(startYear, endYear);
         System.out.println(myLeapYears);
+
+        System.out.println();
+        System.out.println("Введите количество требуемых зарплат: ");
+        int salaryNumbers = scanner.nextInt();
+        List<Double> mySalaries = salaries(salaryNumbers);
+
+        System.out.println("Список вещественных чисел,\n" +
+                "        состоящих из случайных зарплат, распределенных по закону нормального распределения:");
+        System.out.println("(Зарплата больше либо равна 0 ... Это же зарплата... убрал отрицательные зарплаты.  )");
+        System.out.println(mySalaries);
+
+
 
 
 
@@ -36,6 +50,25 @@ public class Main {
                 .toList();
 
         return leapYearRange;
+    }
+
+    /*
+        2.	Напишите метод, который на вход принимает целое число(количество зарплат) и возвращает список вещественных чисел,
+        состоящих из случайных зарплат, распределенных по закону нормального распределения.
+        Примечание: У нормального распределения есть два параметра: mean(среднее значение)  и std(среднее отклонение).
+        У класса Random есть метод nextGaussian(), который генерирует нормально распределенное число с параметрами mean=0, std=1.
+        Для генерации зарплат попробуйте параметры: std = 11190, mean = 29267(можете поподбирать свои).
+        Используйте такую формулу генерации: случайная зарплата = nextGaussian() * std + mean.
+         */
+    public static List<Double> salaries (int salaryNumbers){
+        Random randomNumber = new Random();
+        List<Double> mySalaries = DoubleStream.generate(() -> randomNumber.nextGaussian(11190, 29267))
+                .filter(n -> n>=0)
+                .limit(salaryNumbers)
+                .boxed()
+                .toList();
+
+        return mySalaries;
     }
 
 }
